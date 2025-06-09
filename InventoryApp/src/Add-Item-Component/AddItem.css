@@ -2,37 +2,40 @@
 .addItem-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
 }
 
 .input-boxes {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 10px;
+    width: 50px;
 }
 
 .addItem-InputBox{
     display: flex;
     flex-direction: column;
-    width: 200px;
-    padding: 10px;
+    width: 100%;
+    padding: 4px 8px;
 }
 
 .additional-comments-container {
-    grid-column: span 3;
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 500px;
     margin-top: 20px;
 }
 
 .addItem-InputBox-comments{
-    height: 100px;
-    width: 100%;
+    height: 200px;
+    width: 500px;
     resize: none;
     font-size: 14px;
-    padding: 10px;
     border: 1px solid black;
     border-radius: 4px;
+    padding: 10px;
 }
 
 

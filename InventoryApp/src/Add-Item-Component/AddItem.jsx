@@ -45,16 +45,17 @@ location (String)
                     <label htmlFor="location">Location:</label>
                     <input id="location" type="text" />
                 </div>
+            </div>
 
                 <div className="addItem-comments-container">
-                    <label htmlFor="comments">Comments:</label>
+                    {/* <label htmlFor="comments">Comments:</label> */}
                     <textarea id = "comments" className = "addItem-InputBox-comments" 
                     placeholder = "Additional Comments"></textarea>
                 </div>
 
                 <div className = "submit-Button-container">
                     <button className = "submit-Button">Submit</button>
-                </div>
+    
             </div>
         </div>
         
