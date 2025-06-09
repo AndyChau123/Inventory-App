@@ -1,0 +1,54 @@
+
+.addItem-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-boxes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.addItem-InputBox{
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    padding: 10px;
+}
+
+.additional-comments-container {
+    grid-column: span 3;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.addItem-InputBox-comments{
+    height: 100px;
+    width: 100%;
+    resize: none;
+    font-size: 14px;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 4px;
+}
+
+
+.submit-Button {
+    background-color: #76badd;
+    color: white;
+    border: black;
+    font-size: 16px;
+    cursor: pointer;
+    height: 35px;
+    width: 100px;
+    margin-top: auto;
+}
+
+.submit-Button-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
