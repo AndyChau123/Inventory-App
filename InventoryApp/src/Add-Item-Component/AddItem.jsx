@@ -13,6 +13,7 @@ location (String)
 */
 
     return(
+        
         <div className = "addItem-container">
             <h2 className="addItem-title">Add Items</h2>
             <div className = "input-boxes">
@@ -57,7 +58,6 @@ location (String)
     
             </div>
         </div>
-        
     );
 
 }
