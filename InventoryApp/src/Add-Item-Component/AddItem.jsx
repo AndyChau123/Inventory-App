@@ -51,7 +51,7 @@ location (String)
           id="comments"
           className="addItem-InputBox-comments"
           placeholder="Additional Comments"
-        ></textarea>
+        />
       </div>
 
       <div className="submit-Button-container">
