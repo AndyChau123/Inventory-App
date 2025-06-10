@@ -13,8 +13,8 @@ location (String)
 */
 
     return(
-        
         <div className = "addItem-container">
+            <h2 className="addItem-title">Add Items</h2>
             <div className = "input-boxes">
                 <div className="addItem-InputBox">
                     <label htmlFor="name">Name:</label>
@@ -23,7 +23,7 @@ location (String)
 
                 <div className="addItem-InputBox">
                     <label htmlFor="quantity">Quantity:</label>
-                    <input id="quantity" type="text" placeholder="#" />
+                    <input id="quantity" type="number" placeholder="#"/>
                 </div>
 
                 <div className="addItem-InputBox">
@@ -48,7 +48,6 @@ location (String)
             </div>
 
                 <div className="addItem-comments-container">
-                    {/* <label htmlFor="comments">Comments:</label> */}
                     <textarea id = "comments" className = "addItem-InputBox-comments" 
                     placeholder = "Additional Comments"></textarea>
                 </div>
