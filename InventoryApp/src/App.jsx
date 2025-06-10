@@ -1,11 +1,7 @@
-import AddItem from './Add-Item-Component/AddItem.jsx'
+import AddItem from "./Add-Item-Component/AddItem.jsx";
 
 function App() {
-  
-    return(
-        <AddItem />
-    );
-
+  return <AddItem />;
 }
 
-export default App
+export default App;
