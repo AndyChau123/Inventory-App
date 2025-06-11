@@ -22,41 +22,22 @@ function AddItem() {
   };
   */
 
-  const [namelocation, setNameLocation] = useState(
-    {name: "", location: ""}
-  );
-
-  function submitButton() {
-      //const newInfo = {name: itemName, where: namelo};
-
-      setData(d => [...d, ...namelocation]);
-      //setNameLocation({name: "", location: ""});
-  }
-
-  function changeNameLocation(e) {
-    setNameLocation(e.target.value);
-    console.log(e);
-  }
   
+  function submitButton() {
+      const newInfo = {name: itemName, where: location};
 
-  // function submitButton() {
-  //     const newInfo = {name: itemName, where: location};
+      setData(d => [...d, newInfo]);
+      setItemName("");
+      setLocation("");
+  }
 
-  //     setData(d => [...d, newInfo]);
-  //     setItemName("");
-  //     setLocation("");
-  // }
+  function changeItem(e) {
+    setItemName(e.target.value);
+  }
 
-  // function changeItem(e) {
-  //   setItemName(e.target.value);
-  //   console.log("XXXXX");
-  //   console.log(e);
-  //   console.log("XXXXX");
-  // }
-
-  // function changeLocation(e) {
-  //   setLocation(e.target.value)
-  // }
+  function changeLocation(e) {
+    setLocation(e.target.value)
+  }
 
   // const submitButton = (e) => {
   //   e.preventDefault();
@@ -80,14 +61,14 @@ location (String)
       <ul>
           {data.map((information, index) =>
           <p key = {index}>
-              {information.name} {information.location}
+              {information.name} {information.where}
           </p>)}
       </ul>
       <div className="input-boxes">
         <div className="addItem-InputBox">
           <label htmlFor="name">Name:</label>
           <input id="name" type="text" placeholder="Item Name" 
-          value = {namelocation.name} onChange = {changeNameLocation}/>
+          value = {itemName} onChange = {changeItem}/>
         </div>
 
         {/* <div className="addItem-InputBox">
@@ -117,7 +98,7 @@ location (String)
         <div className="addItem-InputBox">
           <label htmlFor="location">Location:</label>
           <input id="location" type="text" 
-          value = {namelocation.location} onChange = {changeNameLocation}/>
+          value = {location} onChange = {changeLocation}/>
         </div>
       </div>
 
