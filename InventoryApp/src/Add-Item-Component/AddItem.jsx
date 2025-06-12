@@ -1,8 +1,45 @@
+import React, { useState } from "react";
 import "./AddItem.css";
 
 function AddItem() {
   /*
-Name (String, required)
+  const [data, setData] = useState([]);
+  const [itemName, setItemName] = useState("");
+  const [quantity, setQuantity] = useState('');
+  const [expDate, setExpDate] = useState('');
+  const [useWithin, setUseWithin] = useState('');
+  const [price, setPrice] = useState('');
+   const [location, setLocation] = useState("");
+  const [comments, setComments] = useState('');
+  */
+
+  const [item, setItem] = useState({
+    itemName: "",
+    quantity: "",
+    expDate: "",
+    useWithin: "",
+    price: "",
+    location: "",
+    comments: "",
+  });
+
+  const [itemList, setItemList] = useState([]);
+
+  const submitButton = () => {
+    setItemList([...itemList, item]);
+    setItem({
+      itemName: "",
+      quantity: "",
+      expDate: "",
+      useWithin: "",
+      price: "",
+      location: "",
+      comments: "",
+    });
+  };
+
+  /*
+Name (String, required) *** Don't forget to include required tags
 Quantity (int, default = 1)
 Expiration Date (date, required)
 Use within # of days (int, default = null)
@@ -14,35 +51,89 @@ location (String)
   return (
     <div className="addItem-container">
       <h2 className="addItem-title">Add Items</h2>
+      <ul>
+        {itemList.map((info, index) => (
+          <p key={index}>
+            {info.itemName} {info.quantity} {info.expDate} {info.useWithin}
+            {info.price} {info.location} {info.comments}
+          </p>
+        ))}
+      </ul>
       <div className="input-boxes">
         <div className="addItem-InputBox">
           <label htmlFor="name">Name:</label>
-          <input id="name" type="text" placeholder="Item Name" />
+          <input
+            id="name"
+            type="text"
+            placeholder="Item Name"
+            value={item.itemName}
+            onChange={(e) => {
+              setItem({ ...item, itemName: e.target.value });
+            }}
+          />
         </div>
 
         <div className="addItem-InputBox">
           <label htmlFor="quantity">Quantity:</label>
-          <input id="quantity" type="number" placeholder="#" />
+          <input
+            id="quantity"
+            type="number"
+            placeholder="#"
+            value={item.quantity}
+            onChange={(e) => {
+              setItem({ ...item, quantity: e.target.value });
+            }}
+          />
         </div>
 
         <div className="addItem-InputBox">
           <label htmlFor="expDate">Expiration Date:</label>
-          <input id="expDate" type="date" />
+          <input
+            id="expDate"
+            type="date"
+            value={item.expDate}
+            onChange={(e) => {
+              setItem({ ...item, expDate: e.target.value });
+            }}
+          />
         </div>
 
         <div className="addItem-InputBox">
           <label htmlFor="price">Price:</label>
-          <input id="price" type="text" placeholder="$" />
+          <input
+            id="price"
+            type="text"
+            placeholder="$"
+            value={item.price}
+            onChange={(e) => {
+              setItem({ ...item, price: e.target.value });
+            }}
+          />
         </div>
 
         <div className="addItem-InputBox">
           <label htmlFor="useWithin">Use Within # of Days:</label>
-          <input id="useWithin" type="text" placeholder="Optional" />
+          <input
+            id="useWithin"
+            type="text"
+            placeholder="Optional"
+            value={item.useWithin}
+            onChange={(e) => {
+              setItem({ ...item, useWithin: e.target.value });
+            }}
+          />
         </div>
 
         <div className="addItem-InputBox">
           <label htmlFor="location">Location:</label>
-          <input id="location" type="text" />
+          <input
+            id="location"
+            type="text"
+            value={item.location}
+            onChange={(e) => {
+              setItem({ ...item, location: e.target.value });
+            }}
+          />
         </div>
       </div>
 
@@ -51,11 +142,17 @@ location (String)
           id="comments"
           className="addItem-InputBox-comments"
           placeholder="Additional Comments"
+          value={item.comments}
+          onChange={(e) => {
+            setItem({ ...item, comments: e.target.value });
+          }}
         />
       </div>
 
       <div className="submit-Button-container">
-        <button className="submit-Button">Submit</button>
+        <button className="submit-Button" onClick={submitButton}>
+          Submit
+        </button>
       </div>
     </div>
   );
