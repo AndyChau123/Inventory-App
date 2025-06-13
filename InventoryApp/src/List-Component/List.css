@@ -1,0 +1,27 @@
+.listTable table {
+  width: 245%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+}
+
+.listTable th,
+.listTable td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.listTable th {
+  background-color: #76badd;
+  color: white;
+}
+
+.listTable tr:nth-child(even) {
+  background-color: #ffffff1f;
+}
+
+.listTable tr:hover {
+  background-color: #e0f7fa38;
+}
