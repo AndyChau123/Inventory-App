@@ -53,16 +53,16 @@ location (String)
       <h2 className="addItem-title">Add Items</h2>
       <ul>
         {itemList.map((info, index) => (
-          <p key={index}>
+          <li key={index} data-testid = "displayItemList">
             {info.itemName} {info.quantity} {info.expDate} {info.useWithin}
             {info.price} {info.location} {info.comments}
-          </p>
+          </li>
         ))}
       </ul>
       <div className="input-boxes">
         <div className="addItem-InputBox">
           <label htmlFor="name">Name:</label>
-          <input
+          <input data-testid = "input-itemName"
             id="name"
             type="text"
             placeholder="Item Name"
@@ -75,7 +75,7 @@ location (String)
 
         <div className="addItem-InputBox">
           <label htmlFor="quantity">Quantity:</label>
-          <input
+          <input data-testid = "input-quantity"
             id="quantity"
             type="number"
             placeholder="#"
@@ -88,7 +88,7 @@ location (String)
 
         <div className="addItem-InputBox">
           <label htmlFor="expDate">Expiration Date:</label>
-          <input
+          <input data-testid = "input-expDate"
             id="expDate"
             type="date"
             value={item.expDate}
@@ -100,7 +100,7 @@ location (String)
 
         <div className="addItem-InputBox">
           <label htmlFor="price">Price:</label>
-          <input
+          <input data-testid = "input-price"
             id="price"
             type="text"
             placeholder="$"
@@ -113,7 +113,7 @@ location (String)
 
         <div className="addItem-InputBox">
           <label htmlFor="useWithin">Use Within # of Days:</label>
-          <input
+          <input data-testid = "input-useWithin"
             id="useWithin"
             type="text"
             placeholder="Optional"
@@ -126,7 +126,7 @@ location (String)
 
         <div className="addItem-InputBox">
           <label htmlFor="location">Location:</label>
-          <input
+          <input data-testid = "input-location"
             id="location"
             type="text"
             value={item.location}
@@ -138,7 +138,7 @@ location (String)
       </div>
 
       <div className="addItem-comments-container">
-        <textarea
+        <textarea data-testid = "input-comments"
           id="comments"
           className="addItem-InputBox-comments"
           placeholder="Additional Comments"
