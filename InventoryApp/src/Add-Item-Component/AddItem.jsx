@@ -1,17 +1,7 @@
 import React, { useState } from "react";
 import "./AddItem.css";
 
-function AddItem() {
-  /*
-  const [data, setData] = useState([]);
-  const [itemName, setItemName] = useState("");
-  const [quantity, setQuantity] = useState('');
-  const [expDate, setExpDate] = useState('');
-  const [useWithin, setUseWithin] = useState('');
-  const [price, setPrice] = useState('');
-   const [location, setLocation] = useState("");
-  const [comments, setComments] = useState('');
-  */
+function AddItem({ addItem }) {
 
   const [item, setItem] = useState({
     itemName: "",
@@ -23,10 +13,18 @@ function AddItem() {
     comments: "",
   });
 
-  const [itemList, setItemList] = useState([]);
-
   const submitButton = () => {
-    setItemList([...itemList, item]);
+    const newItem = {
+      name: item.itemName,
+      quantity: item.quantity,
+      expDate: item.expDate,
+      useWithin: item.useWithin,
+      price: item.price,
+      location: item.location,
+      comments: item.comments,
+    };
+    addItem(newItem);
+
     setItem({
       itemName: "",
       quantity: "",
@@ -51,14 +49,7 @@ location (String)
   return (
     <div className="addItem-container">
       <h2 className="addItem-title">Add Items</h2>
-      <ul>
-        {itemList.map((info, index) => (
-          <li key={index} data-testid="displayItemList">
-            {info.itemName} {info.quantity} {info.expDate} {info.useWithin}{" "}
-            {info.price} {info.location} {info.comments}
-          </li>
-        ))}
-      </ul>
+
       <div className="input-boxes">
         <div className="addItem-InputBox">
           <label htmlFor="name">Name:</label>

@@ -1,43 +1,11 @@
 import "./List.css";
 import * as React from "react";
 import { useTable } from "react-table";
-import { useState } from "react";
-import AddItem from "../Add-Item-Component/AddItem";
 
-function List() {
-  // Sample data for the table
-  const [items] = useState([
-    {
-      name: "Apple",
-      quantity: 5,
-      expDate: "2025-07-01",
-      useWithin: 7,
-      price: 0.5,
-      notes: "Organic Fuji apples",
-      location: "Fridge",
-    },
-    {
-      name: "Milk",
-      quantity: 2,
-      expDate: "2025-06-15",
-      useWithin: 3,
-      price: 3.49,
-      notes: "2% Reduced Fat",
-      location: "Fridge",
-    },
-    {
-      name: "Bread",
-      quantity: 1,
-      expDate: "2025-06-13",
-      useWithin: 2,
-      price: 2.99,
-      notes: "Whole wheat",
-      location: "Pantry",
-    },
-  ]);
+function List({itemList}) {
 
   // assign items array to data
-  const data = React.useMemo(() => items, [items]);
+  const data = React.useMemo(() => itemList, [itemList]);
 
   //define columns
   const columns = React.useMemo(
