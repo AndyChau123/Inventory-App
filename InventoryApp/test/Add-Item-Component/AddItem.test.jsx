@@ -1,58 +1,42 @@
 import React from "react";
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import AddItem from "../../src/Add-Item-Component/AddItem";
-import List from "../../src/List-Component/List";
-import App from "../../src/App";
 import { describe, it, expect, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 
+describe("AddItem", () => {
+  it("checks if the AddItem method is being called (not updated)", async () => {
+    const mockFunction = vi.fn();
+    render(<AddItem addItem={mockFunction} />);
 
-vi.mock("../../src/Add-Item-Component/AddItem", () => {
-  return {
-    default: (props) => (
-      <button
-        onClick={() => props.addItem({
-            itemName: "Milk",
-            quantity: "1",
-            price: "20.25",
-            expDate: "2025-07-21",
-            location: "Locker",
-          })
-        }
-      >Submit</button>
-    ),
-  };
-});
+    const itemName = screen.getByTestId("input-itemName");
+    const quantity = screen.getByTestId("input-quantity");
+    const expDate = screen.getByTestId("input-expDate");
+    const useWithin = screen.getByTestId("input-useWithin");
+    const price = screen.getByTestId("input-price");
+    const location = screen.getByTestId("input-location");
+    const comments = screen.getByTestId("input-comments");
 
-vi.mock("../../src/List-Component/List", () => {
-  return {
-    default: (props) => (
-      <div data-testid="displayItemList">
-        {props.itemList.map((info, index) => (
-          <div key={index}>
-            {info.itemName} {info.quantity} {info.price} {info.expDate}{" "}
-            {info.location}
-          </div>
-        ))}
-      </div>
-    ),
-  };
-});
+    await userEvent.type(itemName, "Milk");
+    await userEvent.type(quantity, "1");
+    await userEvent.type(expDate, "2025-07-21");
+    await userEvent.type(useWithin, "7");
+    await userEvent.type(price, "20.22");
+    await userEvent.type(location, "Locker");
+    await userEvent.type(comments, "This is my Storage");
 
-describe("App", () => {
-    it("checks if data is being passed and getting updated in AddItem/List", async () => {
-        render(<App />);
+    const button = screen.getByRole("button", { name: /Submit/i });
+    await userEvent.click(button);
 
-        const button = screen.getByRole("button", {name: /Submit/i });
-        await userEvent.click(button);
-
-        const table = screen.getByTestId("displayItemList");
-
-        expect(table).toHaveTextContent("Milk");
-        expect(table).toHaveTextContent("1");
-        expect(table).toHaveTextContent("20.25");
-        expect(table).toHaveTextContent("2025-07-21");
-        expect(table).toHaveTextContent("Locker");
+    expect(mockFunction).toHaveBeenCalledWith({
+      itemName: "Milk",
+      quantity: "1",
+      expDate: "2025-07-21",
+      useWithin: "7",
+      price: "20.22",
+      location: "Locker",
+      comments: "This is my Storage",
     });
+  });
 });

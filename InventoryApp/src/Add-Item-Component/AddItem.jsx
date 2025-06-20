@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./AddItem.css";
 
 function AddItem({ addItem }) {
-
   const [item, setItem] = useState({
     itemName: "",
     quantity: "",
@@ -15,7 +14,7 @@ function AddItem({ addItem }) {
 
   const submitButton = () => {
     const newItem = {
-      name: item.itemName,
+      itemName: item.itemName,
       quantity: item.quantity,
       expDate: item.expDate,
       useWithin: item.useWithin,

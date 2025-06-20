@@ -2,8 +2,7 @@ import "./List.css";
 import * as React from "react";
 import { useTable } from "react-table";
 
-function List({itemList}) {
-
+function List({ itemList }) {
   // assign items array to data
   const data = React.useMemo(() => itemList, [itemList]);
 
@@ -12,7 +11,7 @@ function List({itemList}) {
     () => [
       {
         Header: "Name",
-        accessor: "name",
+        accessor: "itemName",
         size: 2000,
       },
       {
@@ -35,7 +34,7 @@ function List({itemList}) {
     []
   );
 
-  // use the useTale hook to create a table instance
+  // use the useTable hook with columns and data to create a table instance using the react table functions
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data });
 
@@ -43,7 +42,7 @@ function List({itemList}) {
     <div className="list">
       <div className="listTable">
         <table {...getTableProps()}>
-          {/* get header info */}
+          {/* get header info /}
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
@@ -55,12 +54,13 @@ function List({itemList}) {
               </tr>
             ))}
           </thead>
-          {/* get items info and send to table */}
+          {/ get items info and send to table */}
           <tbody {...getTableBodyProps()}>
             {rows.map((row) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
+                // add test id to each row representing an item
+                <tr {...row.getRowProps()} data-testid="itemList">
                   {row.cells.map((cell) => (
                     <td {...cell.getCellProps()}> {cell.render("Cell")} </td>
                   ))}
