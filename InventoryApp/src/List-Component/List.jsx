@@ -1,50 +1,17 @@
 import "./List.css";
 import * as React from "react";
 import { useTable } from "react-table";
-import { useState } from "react";
-import AddItem from "../Add-Item-Component/AddItem";
 
-function List() {
-  // Sample data for the table
-  const [items] = useState([
-    {
-      name: "Apple",
-      quantity: 5,
-      expDate: "2025-07-01",
-      useWithin: 7,
-      price: 0.5,
-      notes: "Organic Fuji apples",
-      location: "Fridge",
-    },
-    {
-      name: "Milk",
-      quantity: 2,
-      expDate: "2025-06-15",
-      useWithin: 3,
-      price: 3.49,
-      notes: "2% Reduced Fat",
-      location: "Fridge",
-    },
-    {
-      name: "Bread",
-      quantity: 1,
-      expDate: "2025-06-13",
-      useWithin: 2,
-      price: 2.99,
-      notes: "Whole wheat",
-      location: "Pantry",
-    },
-  ]);
-
+function List({ itemList }) {
   // assign items array to data
-  const data = React.useMemo(() => items, [items]);
+  const data = React.useMemo(() => itemList, [itemList]);
 
   //define columns
   const columns = React.useMemo(
     () => [
       {
         Header: "Name",
-        accessor: "name",
+        accessor: "itemName",
         size: 2000,
       },
       {
@@ -67,7 +34,7 @@ function List() {
     []
   );
 
-  // use the useTale hook to create a table instance
+  // use the useTable hook with columns and data to create a table instance using the react table functions
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data });
 
@@ -75,7 +42,7 @@ function List() {
     <div className="list">
       <div className="listTable">
         <table {...getTableProps()}>
-          {/* get header info */}
+          {/* get header info /}
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
@@ -87,12 +54,13 @@ function List() {
               </tr>
             ))}
           </thead>
-          {/* get items info and send to table */}
+          {/ get items info and send to table */}
           <tbody {...getTableBodyProps()}>
             {rows.map((row) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
+                // add test id to each row representing an item
+                <tr {...row.getRowProps()} data-testid="itemList">
                   {row.cells.map((cell) => (
                     <td {...cell.getCellProps()}> {cell.render("Cell")} </td>
                   ))}
