@@ -42,7 +42,7 @@ function List({ itemList }) {
     <div className="list">
       <div className="listTable">
         <table {...getTableProps()}>
-          {/* get header info /}
+          {/* get header info */}
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
@@ -54,7 +54,7 @@ function List({ itemList }) {
               </tr>
             ))}
           </thead>
-          {/ get items info and send to table */}
+          {/* get items info and send to table */}
           <tbody {...getTableBodyProps()}>
             {rows.map((row) => {
               prepareRow(row);
