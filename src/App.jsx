@@ -5,9 +5,21 @@ import "./App.css";
 
 function App() {
   const [itemList, setItemList] = useState([]);
+  const [sortAsc, setSortAsc] = useState(true);
 
   const addItem = (newItem) => {
     setItemList((prev) => [...prev, newItem]);
+  };
+
+  const sortByName = () => {
+    setItemList((prev) =>
+      [...prev].sort((a, b) =>
+        sortAsc
+          ? a.itemName.localeCompare(b.itemName)
+          : b.itemName.localeCompare(a.itemName)
+      )
+    );
+    setSortAsc((prev) => !prev);
   };
 
   return (
