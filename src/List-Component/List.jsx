@@ -1,6 +1,6 @@
 import "./List.css";
 import * as React from "react";
-import { useTable } from "react-table";
+import { useSortBy, useTable } from "react-table";
 
 function List({ itemList }) {
   // assign items array to data
@@ -13,6 +13,15 @@ function List({ itemList }) {
         Header: "Name",
         accessor: "itemName",
         size: 2000,
+
+        // Set everything to lowercase for sorting
+        sortType: (rowA, rowB, columnId) => {
+          const a = rowA.values[columnId]?.toLowerCase() || "";
+          const b = rowB.values[columnId]?.toLowerCase() || "";
+          if (a > b) return 1;
+          if (a < b) return -1;
+          return 0;
+        },
       },
       {
         Header: "Quantity",
@@ -36,7 +45,7 @@ function List({ itemList }) {
 
   // use the useTable hook with columns and data to create a table instance using the react table functions
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data });
+    useTable({ columns, data }, useSortBy);
 
   return (
     <div className="list">
@@ -47,8 +56,11 @@ function List({ itemList }) {
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps()}>
+                  // Add sorting props to header cells
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                     {column.render("Header")}
+                    {/* Show sort indicator */}
+                    {column.isSorted ? (column.isSortedDesc ? " v" : " ^") : ""}
                   </th>
                 ))}
               </tr>
