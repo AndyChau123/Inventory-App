@@ -1,6 +1,6 @@
 import "./List.css";
 import * as React from "react";
-import { useTable } from "react-table";
+import { useTable, useRowSelect } from "react-table";
 
 function List({ itemList }) {
   // assign items array to data
@@ -34,9 +34,43 @@ function List({ itemList }) {
     []
   );
 
+  const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef();
+    const resolvedRef = ref || defaultRef;
+
+    React.useEffect(() => {
+      if (resolvedRef.current) {
+        resolvedRef.current.indeterminate = indeterminate;
+      }
+    }, [resolvedRef, indeterminate]);
+
+    return <input type="checkbox" ref={resolvedRef} {...rest} />;
+  }
+);
+
   // use the useTable hook with columns and data to create a table instance using the react table functions
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data });
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, selectedFlatRows, } 
+    = useTable({ columns, data }, useRowSelect, (hooks) => {
+    hooks.visibleColumns.push(columns => [
+      {
+        id: 'selection',
+        Header: ({ getToggleAllRowsSelectedProps }) => (
+          <div>
+            <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+          </div>
+        ),
+        Cell: ({ row }) => (
+          <div>
+            <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+          </div>
+        ),
+      },
+      ...columns,
+    ])
+  }
+);
+
 
   return (
     <div className="list">
