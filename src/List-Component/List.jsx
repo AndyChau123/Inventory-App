@@ -94,7 +94,8 @@ function List({ itemList }) {
               prepareRow(row);
               return (
                 // add test id to each row representing an item
-                <tr {...row.getRowProps()} data-testid="itemList">
+                <tr {...row.getRowProps()} 
+                className = {row.isSelected ? "highlighted-row" : "" } data-testid="itemList">
                   {row.cells.map((cell) => (
                     <td {...cell.getCellProps()}> {cell.render("Cell")} </td>
                   ))}
