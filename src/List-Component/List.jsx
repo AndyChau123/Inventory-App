@@ -2,6 +2,16 @@ import "./List.css";
 import * as React from "react";
 import { useSortBy, useTable } from "react-table";
 
+// Sorting items by equivalent data defaults to sorting by item name with tieBreaker_name
+function tieBreaker_name(rowA, rowB) {
+  const a = rowA.values["itemName"]?.toLowerCase() || "";
+  const b = rowB.values["itemName"]?.toLowerCase() || "";
+  if (a > b) return 1;
+  if (a < b) return -1;
+  return 0;
+}
+
+// Import itemList prop from App.jsx to display items in the table
 function List({ itemList }) {
   // assign items array to data
   const data = React.useMemo(() => itemList, [itemList]);
@@ -14,8 +24,9 @@ function List({ itemList }) {
         accessor: "itemName",
         size: 2000,
 
-        // Set everything to lowercase for sorting
+        // Define custom sorting function for item names
         sortType: (rowA, rowB, columnId) => {
+          // Set everything to lowercase for sorting
           const a = rowA.values[columnId]?.toLowerCase() || "";
           const b = rowB.values[columnId]?.toLowerCase() || "";
           if (a > b) return 1;
@@ -26,18 +37,63 @@ function List({ itemList }) {
       {
         Header: "Quantity",
         accessor: "quantity",
+
+        // Sort by item quantity then by item name
+        sortType: (rowA, rowB, columnId) => {
+          // Make sure quantity is a number
+          const a = Number(rowA.values[columnId]);
+          const b = Number(rowB.values[columnId]);
+          if (a > b) return 1;
+          if (a < b) return -1;
+
+          // If quantities are equivalent, tie breaker by name
+          return tieBreaker_name(rowA, rowB);
+        },
       },
       {
         Header: "$/Item",
         accessor: "price",
+
+        // Sort by item price then by item name
+        sortType: (rowA, rowB, columnId) => {
+          const a = Number(rowA.values[columnId]);
+          const b = Number(rowB.values[columnId]);
+          if (a > b) return 1;
+          if (a < b) return -1;
+
+          // If prices are equivalent, tie breaker by name
+          return tieBreaker_name(rowA, rowB);
+        },
       },
       {
         Header: "Expiration Date",
         accessor: "expDate",
+
+        // Sort by expiration date then by item name
+        sortType: (rowA, rowB, columnId) => {
+          const a = new Date(rowA.values[columnId]);
+          const b = new Date(rowB.values[columnId]);
+          if (a > b) return 1;
+          if (a < b) return -1;
+
+          // If dates are equivalent, tie breaker by name
+          return tieBreaker_name(rowA, rowB);
+        },
       },
       {
         Header: "Location",
         accessor: "location",
+
+        // Sort by item location then by item name
+        sortType: (rowA, rowB, columnId) => {
+          const a = rowA.values[columnId]?.toLowerCase() || "";
+          const b = rowB.values[columnId]?.toLowerCase() || "";
+          if (a > b) return 1;
+          if (a < b) return -1;
+
+          // If locations are equivalent, tie breaker by name
+          return tieBreaker_name(rowA, rowB);
+        },
       },
     ],
     []

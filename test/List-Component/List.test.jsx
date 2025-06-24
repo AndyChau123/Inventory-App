@@ -1,10 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import React from "react";
 import List from "../../src/List-Component/List.jsx";
 import "@testing-library/jest-dom/vitest";
 
 describe("App", () => {
+  // Test to check if the List component renders without crashing
   it("Checks if sample items in itemList are being displayed in the table", async () => {
     // make sample items list to pass to itemList prop
     const sampleItems = [
@@ -40,5 +41,41 @@ describe("App", () => {
     expect(table[1]).toHaveTextContent("2.00");
     expect(table[1]).toHaveTextContent("2025-07-25");
     expect(table[1]).toHaveTextContent("Pantry");
+  });
+
+  // Sorting tests
+  it("sorts items by name", async () => {
+    const sampleItems = [
+      {
+        itemName: "Eggs",
+        quantity: "12",
+        price: "3.50",
+        expDate: "2025-08-01",
+        location: "Fridge",
+      },
+      {
+        itemName: "Bread",
+        quantity: "1",
+        price: "2.00",
+        expDate: "2025-07-25",
+        location: "Pantry",
+      },
+    ];
+
+    render(<List itemList={sampleItems} />);
+
+    const table = screen.getAllByTestId("itemList");
+
+    // Check initial order
+    expect(table[0]).toHaveTextContent("Eggs");
+    expect(table[1]).toHaveTextContent("Bread");
+
+    // Simulate sorting
+    const nameHeaders = screen.getAllByRole("columnheader", { name: /name/i });
+    fireEvent.click(nameHeaders[0]);
+
+    // Check new order
+    expect(table[0]).toHaveTextContent("Bread");
+    expect(table[1]).toHaveTextContent("Eggs");
   });
 });
