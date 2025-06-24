@@ -65,14 +65,22 @@ describe("List", () => {
 
     const checkboxes = screen.getAllByRole("checkbox");
 
-    expect(checkboxes[3]).not.toBeChecked();
-    fireEvent.click(checkboxes[3]);
-    expect(checkboxes[3]).toBeChecked();
-
+    expect(checkboxes[0]).not.toBeChecked();
     expect(checkboxes[1]).not.toBeChecked();
     expect(checkboxes[2]).not.toBeChecked();
 
+    fireEvent.click(checkboxes[2]);
+    expect(checkboxes[2]).toBeChecked();
     expect(checkboxes[0]).not.toBeChecked();
+    expect(checkboxes[1]).not.toBeChecked();
+    fireEvent.click(checkboxes[2]); //unchecking the 2nd row
+
+    fireEvent.click(checkboxes[1]);
+    expect(checkboxes[1]).toBeChecked();
+    expect(checkboxes[0]).not.toBeChecked();
+    expect(checkboxes[2]).not.toBeChecked();
+    fireEvent.click(checkboxes[1]); //unchecking the 1st row
+
     fireEvent.click(checkboxes[0]);
     expect(checkboxes[0]).toBeChecked();
 
