@@ -65,18 +65,16 @@ describe("List", () => {
 
     const checkboxes = screen.getAllByRole("checkbox");
 
-    //check the first three rows in table
+    expect(checkboxes[3]).not.toBeChecked();
+    fireEvent.click(checkboxes[3]);
+    expect(checkboxes[3]).toBeChecked();
+
     expect(checkboxes[1]).not.toBeChecked();
     expect(checkboxes[2]).not.toBeChecked();
-    expect(checkboxes[3]).not.toBeChecked();
 
-    fireEvent.click(checkboxes[1]);
-    fireEvent.click(checkboxes[2]);
-    fireEvent.click(checkboxes[3]);
-
-    expect(checkboxes[1]).toBeChecked();
-    expect(checkboxes[2]).toBeChecked();
-    expect(checkboxes[3]).toBeChecked();
+    expect(checkboxes[0]).not.toBeChecked();
+    fireEvent.click(checkboxes[0]);
+    expect(checkboxes[0]).toBeChecked();
 
   });
 });
