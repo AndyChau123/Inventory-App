@@ -79,6 +79,11 @@ describe("List", () => {
     expect(checkboxes[0]).toBeChecked();
     expect(checkboxes[1]).toBeChecked();
     expect(checkboxes[2]).toBeChecked();
+    fireEvent.click(checkboxes[0]); //unchecking the select all row
+
+    expect(checkboxes[0]).not.toBeChecked();
+    expect(checkboxes[1]).not.toBeChecked();
+    expect(checkboxes[2]).not.toBeChecked();
 
   });
 });
