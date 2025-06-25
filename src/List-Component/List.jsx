@@ -1,6 +1,6 @@
 import "./List.css";
 import * as React from "react";
-import { useSortBy, useTable } from "react-table";
+import { useSortBy, useTable, useRowSelect } from "react-table";
 
 // Sorting items by equivalent data defaults to sorting by item name with tieBreaker_name
 function tieBreaker_name(rowA, rowB) {
@@ -99,9 +99,47 @@ function List({ itemList }) {
     []
   );
 
+  const IndeterminateCheckbox = React.forwardRef(
+    ({ indeterminate, ...rest }, ref) => {
+      const defaultRef = React.useRef();
+      const resolvedRef = ref || defaultRef;
+
+      React.useEffect(() => {
+        if (resolvedRef.current) {
+          resolvedRef.current.indeterminate = indeterminate;
+        }
+      }, [resolvedRef, indeterminate]);
+
+      return <input type="checkbox" ref={resolvedRef} {...rest} />;
+    }
+  );
+
   // use the useTable hook with columns and data to create a table instance using the react table functions
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data }, useSortBy);
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    selectedFlatRows,
+  } = useTable({ columns, data }, useSortBy, useRowSelect, (hooks) => {
+    hooks.visibleColumns.push((columns) => [
+      {
+        id: "selection",
+        Header: ({ getToggleAllRowsSelectedProps }) => (
+          <div>
+            <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+          </div>
+        ),
+        Cell: ({ row }) => (
+          <div>
+            <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+          </div>
+        ),
+      },
+      ...columns,
+    ]);
+  });
 
   return (
     <div className="list">
@@ -128,7 +166,11 @@ function List({ itemList }) {
               prepareRow(row);
               return (
                 // add test id to each row representing an item
-                <tr {...row.getRowProps()} data-testid="itemList">
+                <tr
+                  {...row.getRowProps()}
+                  className={row.isSelected ? "highlighted-row" : ""}
+                  data-testid="itemList"
+                >
                   {row.cells.map((cell) => (
                     <td {...cell.getCellProps()}> {cell.render("Cell")} </td>
                   ))}

@@ -33,3 +33,8 @@
 .listTable tr:hover {
   background-color: #e0f7fa38;
 }
+
+.highlighted-row {
+  background-color: rgb(203, 238, 249) !important;
+  transition: background-color 0.3s ease;
+}
