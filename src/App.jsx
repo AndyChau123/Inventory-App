@@ -4,6 +4,7 @@ import List from "./List-Component/List.jsx";
 import "./App.css";
 
 function App() {
+  // Sample item list to display in the table
   const [itemList, setItemList] = useState([]);
 
   const addItem = (newItem) => {
