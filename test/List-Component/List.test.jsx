@@ -1,11 +1,10 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, afterEach } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import React from "react";
 import List from "../../src/List-Component/List.jsx";
 import "@testing-library/jest-dom/vitest";
 
-// Ensure each test starts with no data and clean slate
-beforeEach(cleanup);
+// Ensure each tests clears the DOM after each test
 afterEach(cleanup);
 
 describe("List", () => {
@@ -96,21 +95,21 @@ describe("List", () => {
         itemName: "Eggs",
         quantity: 12,
         price: 3.5,
-        expDate: "2025-08-01",
+        expDate: "2025-06-30",
         location: "Fridge",
       },
       {
         itemName: "apple",
         quantity: 5,
         price: 1.5,
-        expDate: "2025-06-30",
+        expDate: "2025-08-15",
         location: "Fridge",
       },
       {
         itemName: "Bread",
         quantity: 1,
         price: 2.0,
-        expDate: "2025-07-25",
+        expDate: "2025-07-01",
         location: "Pantry",
       },
     ];
@@ -147,9 +146,9 @@ describe("List", () => {
     });
     fireEvent.click(expDateHeader);
     rows = await screen.findAllByTestId("itemList");
-    expect(rows[0]).toHaveTextContent("apple");
+    expect(rows[0]).toHaveTextContent("Eggs");
     expect(rows[1]).toHaveTextContent("Bread");
-    expect(rows[2]).toHaveTextContent("Eggs");
+    expect(rows[2]).toHaveTextContent("apple");
   });
 
   // Tests that sorting equivalent values uses name as a tiebreaker
@@ -208,7 +207,7 @@ describe("List", () => {
         location: "Fridge",
       },
       {
-        itemName: "Eggs",
+        itemName: "Bread",
         quantity: 5,
         price: 2.0,
         expDate: "2025-08-01",
@@ -228,7 +227,7 @@ describe("List", () => {
 
     // Initial order check
     expect(rows[0]).toHaveTextContent("Eggs");
-    expect(rows[1]).toHaveTextContent("Eggs");
+    expect(rows[1]).toHaveTextContent("Bread");
     expect(rows[2]).toHaveTextContent("Bread");
 
     // Sort by quantities
@@ -238,7 +237,7 @@ describe("List", () => {
     fireEvent.click(quantityHeader);
     rows = await screen.findAllByTestId("itemList");
     expect(rows[0]).toHaveTextContent("Bread");
-    expect(rows[1]).toHaveTextContent("Eggs");
+    expect(rows[1]).toHaveTextContent("Bread");
     expect(rows[2]).toHaveTextContent("Eggs");
   });
 
@@ -246,11 +245,11 @@ describe("List", () => {
   it("handles sorting when some values are empty", async () => {
     const sampleItems = [
       {
-        itemName: "",
-        quantity: "",
-        price: "",
-        expDate: "",
-        location: "",
+        itemName: null,
+        quantity: null,
+        price: null,
+        expDate: null,
+        location: null,
       },
       {
         itemName: "Banana",
@@ -261,7 +260,7 @@ describe("List", () => {
       },
       {
         itemName: "Apple",
-        quantity: "",
+        quantity: null,
         price: 1.5,
         expDate: "2025-06-30",
         location: "Fridge",

@@ -4,7 +4,6 @@ import { useSortBy, useTable, useRowSelect } from "react-table";
 
 // Sort function to handle all data types (equal values sort by name after)
 function sort(rowA, rowB, columnId) {
-  // const a = Number(rowA.values[columnId]?.toLowerCase() || "");
   var a = rowA.values[columnId] || "";
   var b = rowB.values[columnId] || "";
 
