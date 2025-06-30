@@ -2,7 +2,7 @@ import "./List.css";
 import * as React from "react";
 import { useTable, useRowSelect } from "react-table";
 
-function List({ itemList }) {
+function List({ itemList, setItemList }) {
   // assign items array to data
   const data = React.useMemo(() => itemList, [itemList]);
 
@@ -35,26 +35,32 @@ function List({ itemList }) {
   );
 
   const IndeterminateCheckbox = React.forwardRef(
-  ({ indeterminate, ...rest }, ref) => {
-    const defaultRef = React.useRef();
-    const resolvedRef = ref || defaultRef;
+    ({ indeterminate, ...rest }, ref) => {
+      const defaultRef = React.useRef();
+      const resolvedRef = ref || defaultRef;
 
-    React.useEffect(() => {
-      if (resolvedRef.current) {
-        resolvedRef.current.indeterminate = indeterminate;
-      }
-    }, [resolvedRef, indeterminate]);
+      React.useEffect(() => {
+        if (resolvedRef.current) {
+          resolvedRef.current.indeterminate = indeterminate;
+        }
+      }, [resolvedRef, indeterminate]);
 
-    return <input type="checkbox" ref={resolvedRef} {...rest} />;
-  }
-);
+      return <input type="checkbox" ref={resolvedRef} {...rest} />;
+    }
+  );
 
   // use the useTable hook with columns and data to create a table instance using the react table functions
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, selectedFlatRows, } 
-    = useTable({ columns, data }, useRowSelect, (hooks) => {
-    hooks.visibleColumns.push(columns => [
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    selectedFlatRows,
+  } = useTable({ columns, data }, useRowSelect, (hooks) => {
+    hooks.visibleColumns.push((columns) => [
       {
-        id: 'selection',
+        id: "selection",
         Header: ({ getToggleAllRowsSelectedProps }) => (
           <div>
             <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
@@ -67,10 +73,14 @@ function List({ itemList }) {
         ),
       },
       ...columns,
-    ])
-  }
-);
+    ]);
+  });
 
+  const deleteRowButton = () => {
+    const selectRows = selectedFlatRows.map((row) => row.original.id); //gets row data and id
+    const deleteRows = itemList.filter((row) => !selectRows.includes(row.id)); //filters the array and deletes what is selected
+    setItemList(deleteRows); //updates the rows
+  };
 
   return (
     <div className="list">
@@ -94,8 +104,11 @@ function List({ itemList }) {
               prepareRow(row);
               return (
                 // add test id to each row representing an item
-                <tr {...row.getRowProps()} 
-                className = {row.isSelected ? "highlighted-row" : "" } data-testid="itemList">
+                <tr
+                  {...row.getRowProps()}
+                  className={row.isSelected ? "highlighted-row" : ""}
+                  data-testid="itemList"
+                >
                   {row.cells.map((cell) => (
                     <td {...cell.getCellProps()}> {cell.render("Cell")} </td>
                   ))}
@@ -104,6 +117,15 @@ function List({ itemList }) {
             })}
           </tbody>
         </table>
+          <div className="deleteButton-container">
+            <button
+              id="deleteButton"
+              className="deleteButton-icon"
+              onClick={deleteRowButton}
+            >
+              <img src="./images/trashcan.png" alt="Delete"></img>
+            </button>
+          </div>
       </div>
     </div>
   );

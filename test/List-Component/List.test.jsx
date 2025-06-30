@@ -43,7 +43,6 @@ describe("List", () => {
   });
 
   it("checks to see if the checkboxes are being checked or not", async () => {
-      
     const sampleItems = [
       {
         itemName: "Eggs",
@@ -61,7 +60,7 @@ describe("List", () => {
       },
     ];
 
-    render(<List itemList={sampleItems}/>);
+    render(<List itemList={sampleItems} />);
 
     const checkboxes = screen.getAllByRole("checkbox");
 
@@ -84,6 +83,5 @@ describe("List", () => {
     expect(checkboxes[0]).not.toBeChecked();
     expect(checkboxes[1]).not.toBeChecked();
     expect(checkboxes[2]).not.toBeChecked();
-
   });
 });
