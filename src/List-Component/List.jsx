@@ -32,6 +32,10 @@ function List({ itemList }) {
   // assign items array to data
   const data = React.useMemo(() => itemList, [itemList]);
 
+  // use react state to track hovered row and mouse position
+  const [hoveredRow, setHoveredRow] = React.useState(null);
+  const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
+
   //define columns
   const columns = React.useMemo(
     () => [
@@ -140,6 +144,15 @@ function List({ itemList }) {
                   {...row.getRowProps()}
                   className={row.isSelected ? "highlighted-row" : ""}
                   data-testid="itemList"
+                  // find mouse position for item description to display under
+                  onMouseEnter={(e) => {
+                    setHoveredRow(row.original);
+                    setMousePos({ x: e.clientX, y: e.clientY });
+                  }}
+                  onMouseMove={(e) => {
+                    setMousePos({ x: e.clientX, y: e.clientY });
+                  }}
+                  onMouseLeave={() => setHoveredRow(null)}
                 >
                   {row.cells.map((cell) => (
                     <td {...cell.getCellProps()}> {cell.render("Cell")} </td>
@@ -150,6 +163,31 @@ function List({ itemList }) {
           </tbody>
         </table>
       </div>
+      {/* Display item description when hovering over a row */}
+      {hoveredRow !== null && (
+        <div
+          // style the box
+          style={{
+            position: "fixed",
+            top: mousePos.y + 20,
+            left: mousePos.x - 12,
+            background: "rgba(245, 254, 220, 0.85)",
+            color: "#000",
+            padding: "8px 12px",
+            borderRadius: "6px",
+            pointerEvents: "none",
+            zIndex: 1000,
+            maxWidth: "500px",
+            fontSize: "0.9em",
+            whiteSpace: "pre-line",
+          }}
+        >
+          {/* what goes in the box */}
+          {"Use within: " +
+            (hoveredRow.useWithin ? hoveredRow.useWithin + " days\n" : "N/A\n")}
+          {"Comments: " + (hoveredRow.comments || "No comments")}
+        </div>
+      )}
     </div>
   );
 }
