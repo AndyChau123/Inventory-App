@@ -37,6 +37,7 @@ describe("AddItem", () => {
       price: "20.22",
       location: "Locker",
       comments: "This is my Storage",
+      id: expect.any(String),
     });
   });
 });

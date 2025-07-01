@@ -21,7 +21,7 @@ function AddItem({ addItem }) {
       price: item.price,
       location: item.location,
       comments: item.comments,
-      id: crypto.randomUUID(),
+      id: crypto.randomUUID(), //generates random id 
     };
     addItem(newItem);
 

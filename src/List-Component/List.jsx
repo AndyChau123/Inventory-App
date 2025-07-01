@@ -1,6 +1,5 @@
 import "./List.css";
-//import * as React from "react";
-import React, { useState } from "react";
+import * as React from "react";
 import { useTable, useRowSelect } from "react-table";
 
 function List({ itemList, setItemList }) {
@@ -85,14 +84,14 @@ function List({ itemList, setItemList }) {
 
   const deleteRowButton = () => {
     //if table is empty delete nothing and prompt nothing
-      if (selectedFlatRows.length === 0) {
-        return;
-      }
+    if (selectedFlatRows.length === 0) {
+      return;
+    }
 
     //if user clicks the trashcan delete button prompt message confirming to delete or not
-      if (window.confirm("Are you sure you want to delete the selected rows?")) {
-        deleteRowFunction();
-      }
+    if (window.confirm("Are you sure you want to delete the selected rows?")) {
+      deleteRowFunction();
+    }
   };
 
   return (
@@ -130,11 +129,16 @@ function List({ itemList, setItemList }) {
             })}
           </tbody>
         </table>
-          <div className="deleteButton-container">
-            <button id="deleteButton" className="deleteButton-icon" onClick={deleteRowButton}>
-              <img src="./images/trashcan.png" alt="Delete"></img>
-            </button>
-          </div>
+        <div className="deleteButton-container">
+          <button
+            id="deleteButton"
+            data-testid="list-deleteButton"
+            className="deleteButton-icon"
+            onClick={deleteRowButton}
+          >
+            <img src="./images/trashcan.png" alt="Delete"></img>
+          </button>
+        </div>
       </div>
     </div>
   );
