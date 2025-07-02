@@ -1,1 +1,0 @@
-export const CONFIRMATION_SCREEN = "Are you sure you want to delete the selected rows?";

@@ -1,4 +1,4 @@
-import {CONFIRMATION_SCREEN} from "./ListConsonants"
+import {DELETE_CONFIRMATION_MESSAGE} from "./ListConstants"
 import "./List.css";
 import * as React from "react";
 import { useSortBy, useTable, useRowSelect } from "react-table";
@@ -131,7 +131,7 @@ function List({ itemList, setItemList }) {
     }
 
     //if user clicks the trashcan delete button prompt message confirming to delete or not
-    if (window.confirm(CONFIRMATION_SCREEN)) {
+    if (window.confirm(DELETE_CONFIRMATION_MESSAGE)) {
       deleteRowFunction();
     }
   };
