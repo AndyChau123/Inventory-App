@@ -64,7 +64,6 @@ describe("List", () => {
     ];
 
     render(<List itemList={sampleItems} />);
-    render(<List itemList={sampleItems} />);
 
     const checkboxes = screen.getAllByRole("checkbox");
 
@@ -282,7 +281,8 @@ describe("List", () => {
     rows = await screen.findAllByTestId("itemList");
     expect(rows[0]).toHaveTextContent("");
     expect(rows[1]).toHaveTextContent("Apple");
-    expect(rows[2]).toHaveTextContent("Banana");  });
+    expect(rows[2]).toHaveTextContent("Banana");  
+  });
 
   it("checks to see if some of the rows are being deleted from the table with confirmation screen", async () => {
     const sampleItems = [
