@@ -79,24 +79,13 @@ function List({ itemList, setItemList }) {
     ({ indeterminate, ...rest }, ref) => {
       const defaultRef = React.useRef();
       const resolvedRef = ref || defaultRef;
-    ({ indeterminate, ...rest }, ref) => {
-      const defaultRef = React.useRef();
-      const resolvedRef = ref || defaultRef;
 
       React.useEffect(() => {
         if (resolvedRef.current) {
           resolvedRef.current.indeterminate = indeterminate;
         }
       }, [resolvedRef, indeterminate]);
-      React.useEffect(() => {
-        if (resolvedRef.current) {
-          resolvedRef.current.indeterminate = indeterminate;
-        }
-      }, [resolvedRef, indeterminate]);
 
-      return <input type="checkbox" ref={resolvedRef} {...rest} />;
-    }
-  );
       return <input type="checkbox" ref={resolvedRef} {...rest} />;
     }
   );
@@ -109,7 +98,7 @@ function List({ itemList, setItemList }) {
     rows,
     prepareRow,
     selectedFlatRows,
-  } = useTable({ columns, data },  useSortBy, useRowSelect, (hooks) => {
+  } = useTable({ columns, data }, useSortBy, useRowSelect, (hooks) => {
     hooks.visibleColumns.push((columns) => [
       {
         id: "selection",
@@ -171,11 +160,6 @@ function List({ itemList, setItemList }) {
               prepareRow(row);
               return (
                 // add test id to each row representing an item
-                <tr
-                  {...row.getRowProps()}
-                  className={row.isSelected ? "highlighted-row" : ""}
-                  data-testid="itemList"
-                >
                 <tr
                   {...row.getRowProps()}
                   className={row.isSelected ? "highlighted-row" : ""}
