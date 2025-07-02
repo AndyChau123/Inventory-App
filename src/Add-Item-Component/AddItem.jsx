@@ -97,7 +97,7 @@ location (String)
           <input
             data-testid="input-price"
             id="price"
-            type="text"
+            type="number"
             placeholder="$"
             value={item.price}
             onChange={(e) => {

@@ -4,6 +4,7 @@ import React from "react";
 import List from "../../src/List-Component/List.jsx";
 import "@testing-library/jest-dom/vitest";
 
+// Ensure each tests clears the DOM after each test
 afterEach(cleanup);
 
 describe("List", () => {
@@ -63,6 +64,7 @@ describe("List", () => {
     ];
 
     render(<List itemList={sampleItems} />);
+    render(<List itemList={sampleItems} />);
 
     const checkboxes = screen.getAllByRole("checkbox");
 
@@ -86,6 +88,201 @@ describe("List", () => {
     expect(checkboxes[1]).not.toBeChecked();
     expect(checkboxes[2]).not.toBeChecked();
   });
+
+  // Test each branch of the sort function if statements and that they sort correctly
+  it("Test each path through the sort function", async () => {
+    const sampleItems = [
+      {
+        itemName: "Eggs",
+        quantity: 12,
+        price: 3.5,
+        expDate: "2025-06-30",
+        location: "Fridge",
+      },
+      {
+        itemName: "apple",
+        quantity: 5,
+        price: 1.5,
+        expDate: "2025-08-15",
+        location: "Fridge",
+      },
+      {
+        itemName: "Bread",
+        quantity: 1,
+        price: 2.0,
+        expDate: "2025-07-01",
+        location: "Pantry",
+      },
+    ];
+
+    render(<List itemList={sampleItems} />);
+    let rows = screen.getAllByTestId("itemList");
+
+    // Initial order
+    expect(rows[0]).toHaveTextContent("Eggs");
+    expect(rows[1]).toHaveTextContent("apple");
+    expect(rows[2]).toHaveTextContent("Bread");
+
+    // Sort by Name
+    const nameHeader = screen.getByRole("columnheader", { name: /name/i });
+    fireEvent.click(nameHeader);
+    rows = await screen.findAllByTestId("itemList");
+    expect(rows[0]).toHaveTextContent("apple");
+    expect(rows[1]).toHaveTextContent("Bread");
+    expect(rows[2]).toHaveTextContent("Eggs");
+
+    // Sort by Quantity
+    const quantityHeader = screen.getByRole("columnheader", {
+      name: /quantity/i,
+    });
+    fireEvent.click(quantityHeader);
+    rows = await screen.findAllByTestId("itemList");
+    expect(rows[0]).toHaveTextContent("Bread");
+    expect(rows[1]).toHaveTextContent("apple");
+    expect(rows[2]).toHaveTextContent("Eggs");
+
+    // Sort by Expiration Date
+    const expDateHeader = screen.getByRole("columnheader", {
+      name: /expiration date/i,
+    });
+    fireEvent.click(expDateHeader);
+    rows = await screen.findAllByTestId("itemList");
+    expect(rows[0]).toHaveTextContent("Eggs");
+    expect(rows[1]).toHaveTextContent("Bread");
+    expect(rows[2]).toHaveTextContent("apple");
+  });
+
+  // Tests that sorting equivalent values uses name as a tiebreaker
+  it("sorts by name as a tiebreaker when values are equal", async () => {
+    const sampleItems = [
+      {
+        itemName: "Eggs",
+        quantity: 5,
+        price: 3.5,
+        expDate: "2025-08-01",
+        location: "Fridge",
+      },
+      {
+        itemName: "apple",
+        quantity: 5,
+        price: 1.5,
+        expDate: "2025-06-30",
+        location: "Fridge",
+      },
+      {
+        itemName: "Bread",
+        quantity: 5,
+        price: 2.0,
+        expDate: "2025-07-25",
+        location: "Pantry",
+      },
+    ];
+
+    render(<List itemList={sampleItems} />);
+    let rows = screen.getAllByTestId("itemList");
+
+    // Initial order
+    expect(rows[0]).toHaveTextContent("Eggs");
+    expect(rows[1]).toHaveTextContent("apple");
+    expect(rows[2]).toHaveTextContent("Bread");
+
+    // Sort by equivalent quantities to check if it sorts by name after
+    const quantityHeader = screen.getByRole("columnheader", {
+      name: /quantity/i,
+    });
+    fireEvent.click(quantityHeader);
+    rows = await screen.findAllByTestId("itemList");
+    expect(rows[0]).toHaveTextContent("apple");
+    expect(rows[1]).toHaveTextContent("Bread");
+    expect(rows[2]).toHaveTextContent("Eggs");
+  });
+
+  // Test sorting items with equivalent values and same names don't break anything
+  it("handles sorting when items have equivalent values and names", async () => {
+    const sampleItems = [
+      {
+        itemName: "Eggs",
+        quantity: 12,
+        price: 3.5,
+        expDate: "2025-08-01",
+        location: "Fridge",
+      },
+      {
+        itemName: "Bread",
+        quantity: 5,
+        price: 2.0,
+        expDate: "2025-08-01",
+        location: "Pantry",
+      },
+      {
+        itemName: "Bread",
+        quantity: 5,
+        price: 2.0,
+        expDate: "2025-07-25",
+        location: "Pantry",
+      },
+    ];
+
+    render(<List itemList={sampleItems} />);
+    let rows = screen.getAllByTestId("itemList");
+
+    // Initial order check
+    expect(rows[0]).toHaveTextContent("Eggs");
+    expect(rows[1]).toHaveTextContent("Bread");
+    expect(rows[2]).toHaveTextContent("Bread");
+
+    // Sort by quantities
+    const quantityHeader = screen.getByRole("columnheader", {
+      name: /quantity/i,
+    });
+    fireEvent.click(quantityHeader);
+    rows = await screen.findAllByTestId("itemList");
+    expect(rows[0]).toHaveTextContent("Bread");
+    expect(rows[1]).toHaveTextContent("Bread");
+    expect(rows[2]).toHaveTextContent("Eggs");
+  });
+
+  // Test sorting an item with empty values doesn't break anything
+  it("handles sorting when some values are empty", async () => {
+    const sampleItems = [
+      {
+        itemName: null,
+        quantity: null,
+        price: null,
+        expDate: null,
+        location: null,
+      },
+      {
+        itemName: "Banana",
+        quantity: 2,
+        price: 1,
+        expDate: "2025-07-01",
+        location: "Pantry",
+      },
+      {
+        itemName: "Apple",
+        quantity: null,
+        price: 1.5,
+        expDate: "2025-06-30",
+        location: "Fridge",
+      },
+    ];
+
+    render(<List itemList={sampleItems} />);
+    let rows = screen.getAllByTestId("itemList");
+
+    // Initial order (as provided)
+    expect(rows[0]).toHaveTextContent("");
+    expect(rows[1]).toHaveTextContent("Banana");
+    expect(rows[2]).toHaveTextContent("Apple");
+
+    // Sort by Name
+    const nameHeader = screen.getByRole("columnheader", { name: /name/i });
+    fireEvent.click(nameHeader);
+    rows = await screen.findAllByTestId("itemList");
+    expect(rows[0]).toHaveTextContent("");
+    expect(rows[1]).toHaveTextContent("Apple");
+    expect(rows[2]).toHaveTextContent("Banana");  });
 
   it("checks to see if some of the rows are being deleted from the table with confirmation screen", async () => {
     const sampleItems = [

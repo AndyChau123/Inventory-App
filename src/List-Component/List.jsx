@@ -1,7 +1,33 @@
 import "./List.css";
 import * as React from "react";
-import { useTable, useRowSelect } from "react-table";
+import { useSortBy, useTable, useRowSelect } from "react-table";
 
+// Sort function to handle all data types (equal values sort by name after)
+function sort(rowA, rowB, columnId) {
+  var a = rowA.values[columnId] || "";
+  var b = rowB.values[columnId] || "";
+
+  if (typeof a === "string" && typeof b === "string") {
+    if (columnId == "expDate") {
+      a = new Date(a);
+      b = new Date(b);
+    } else {
+      a = a.toLowerCase();
+      b = b.toLowerCase();
+    }
+  }
+
+  if (a > b) return 1;
+  if (a < b) return -1;
+
+  // If already on itemName, don't recurse
+  if (columnId == "itemName") return 0;
+
+  // If equal values and not sorting by name, sort by name
+  return sort(rowA, rowB, "itemName");
+}
+
+// Import itemList prop from App.jsx to display items in the table
 function List({ itemList, setItemList }) {
   // assign items array to data
   const data = React.useMemo(() => itemList, [itemList]);
@@ -13,22 +39,37 @@ function List({ itemList, setItemList }) {
         Header: "Name",
         accessor: "itemName",
         size: 2000,
+
+        // Sort by just name
+        sortType: (rowA, rowB, columnId) => sort(rowA, rowB, columnId),
       },
       {
         Header: "Quantity",
         accessor: "quantity",
+
+        // Sort quantity column
+        sortType: (rowA, rowB, columnId) => sort(rowA, rowB, columnId),
       },
       {
         Header: "$/Item",
         accessor: "price",
+
+        // Sort price column
+        sortType: (rowA, rowB, columnId) => sort(rowA, rowB, columnId),
       },
       {
         Header: "Expiration Date",
         accessor: "expDate",
+
+        // Sort expiration date column
+        sortType: (rowA, rowB, columnId) => sort(rowA, rowB, columnId),
       },
       {
         Header: "Location",
         accessor: "location",
+
+        // Sort location column
+        sortType: (rowA, rowB, columnId) => sort(rowA, rowB, columnId),
       },
     ],
     []
@@ -38,13 +79,24 @@ function List({ itemList, setItemList }) {
     ({ indeterminate, ...rest }, ref) => {
       const defaultRef = React.useRef();
       const resolvedRef = ref || defaultRef;
+    ({ indeterminate, ...rest }, ref) => {
+      const defaultRef = React.useRef();
+      const resolvedRef = ref || defaultRef;
 
       React.useEffect(() => {
         if (resolvedRef.current) {
           resolvedRef.current.indeterminate = indeterminate;
         }
       }, [resolvedRef, indeterminate]);
+      React.useEffect(() => {
+        if (resolvedRef.current) {
+          resolvedRef.current.indeterminate = indeterminate;
+        }
+      }, [resolvedRef, indeterminate]);
 
+      return <input type="checkbox" ref={resolvedRef} {...rest} />;
+    }
+  );
       return <input type="checkbox" ref={resolvedRef} {...rest} />;
     }
   );
@@ -57,7 +109,7 @@ function List({ itemList, setItemList }) {
     rows,
     prepareRow,
     selectedFlatRows,
-  } = useTable({ columns, data }, useRowSelect, (hooks) => {
+  } = useTable({ columns, data },  useSortBy, useRowSelect, (hooks) => {
     hooks.visibleColumns.push((columns) => [
       {
         id: "selection",
@@ -103,8 +155,11 @@ function List({ itemList, setItemList }) {
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps()}>
+                  // Add sorting props to header cells
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                     {column.render("Header")}
+                    {/* Show sort indicator */}
+                    {column.isSorted ? (column.isSortedDesc ? " v" : " ^") : ""}
                   </th>
                 ))}
               </tr>
@@ -116,6 +171,11 @@ function List({ itemList, setItemList }) {
               prepareRow(row);
               return (
                 // add test id to each row representing an item
+                <tr
+                  {...row.getRowProps()}
+                  className={row.isSelected ? "highlighted-row" : ""}
+                  data-testid="itemList"
+                >
                 <tr
                   {...row.getRowProps()}
                   className={row.isSelected ? "highlighted-row" : ""}

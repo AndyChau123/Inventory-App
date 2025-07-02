@@ -13,13 +13,21 @@
   text-align: left;
 }
 
+/* Header attributes */
 .listTable th {
   background-color: #76badd;
   color: white;
 }
 
+/* Row attributes */
 .listTable tr:nth-child(even) {
   background-color: #ffffff1f;
+}
+
+.listTable th:hover {
+  background-color: #4fa3d1;
+  /* color: #fff; */
+  cursor: pointer;
 }
 
 .listTable tr:hover {
