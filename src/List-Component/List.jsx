@@ -1,4 +1,4 @@
-import {DELETE_CONFIRMATION_MESSAGE} from "./ListConstants"
+import * as C from "./ListConstants";
 import "./List.css";
 import * as React from "react";
 import { useSortBy, useTable, useRowSelect } from "react-table";
@@ -32,6 +32,10 @@ function sort(rowA, rowB, columnId) {
 function List({ itemList, setItemList }) {
   // assign items array to data
   const data = React.useMemo(() => itemList, [itemList]);
+
+  // use react state to track hovered row and mouse position
+  const [hoveredRow, setHoveredRow] = React.useState(null);
+  const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
 
   //define columns
   const columns = React.useMemo(
@@ -131,11 +135,10 @@ function List({ itemList, setItemList }) {
     }
 
     //if user clicks the trashcan delete button prompt message confirming to delete or not
-    if (window.confirm(DELETE_CONFIRMATION_MESSAGE)) {
+    if (window.confirm(C.DELETE_CONFIRMATION_MESSAGE)) {
       deleteRowFunction();
     }
   };
-
 
   return (
     <div className="list">
@@ -166,6 +169,15 @@ function List({ itemList, setItemList }) {
                   {...row.getRowProps()}
                   className={row.isSelected ? "highlighted-row" : ""}
                   data-testid="itemList"
+                  // find mouse position for item description to display under
+                  onMouseEnter={(e) => {
+                    setHoveredRow(row.original);
+                    setMousePos({ x: e.clientX, y: e.clientY });
+                  }}
+                  onMouseMove={(e) => {
+                    setMousePos({ x: e.clientX, y: e.clientY });
+                  }}
+                  onMouseLeave={() => setHoveredRow(null)}
                 >
                   {row.cells.map((cell) => (
                     <td {...cell.getCellProps()}> {cell.render("Cell")} </td>
@@ -186,6 +198,25 @@ function List({ itemList, setItemList }) {
           </button>
         </div>
       </div>
+      {/* Display item description when hovering over a row */}
+      {hoveredRow !== null && (
+        <div
+          className="description-box"
+          //dynamic positioning done here
+          style={{
+            top: mousePos.y + 20,
+            left: mousePos.x - 12,
+          }}
+        >
+          {C.USE_WITHIN_LABEL}
+          {hoveredRow.useWithin
+            ? C.NUM_DAYS_MSG(hoveredRow.useWithin)
+            : C.NA_MSG}
+          <br />
+          {C.COMMENTS_LABEL}
+          {hoveredRow.comments || C.NO_COMMENTS_MSG}
+        </div>
+      )}
     </div>
   );
 }

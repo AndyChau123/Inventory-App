@@ -422,4 +422,75 @@ describe("List", () => {
     expect(mockSetSampleItems).not.toHaveBeenCalled();
     expect(window.confirm).toHaveBeenCalled();
   });
+
+  it("Tests that useWithin and comments are displayed when hovering over a row and disappears when mouse leaves", async () => {
+    const sampleItems = [
+      {
+        itemName: "Eggs",
+        quantity: 12,
+        price: 3.5,
+        expDate: "2025-08-01",
+        useWithin: 5,
+        comments: "Keep refrigerated.",
+        location: "Fridge",
+      },
+      {
+        itemName: "Bread",
+        quantity: 1,
+        price: 2.0,
+        expDate: "2025-07-25",
+        useWithin: 2,
+        comments: "Best before date is soon.",
+        location: "Pantry",
+      },
+    ];
+
+    render(<List itemList={sampleItems} />);
+    const rows = screen.getAllByTestId("itemList");
+
+    // Hover over the first row
+    fireEvent.mouseEnter(rows[0], { clientX: 100, clientY: 200 });
+
+    // Tooltip should appear with correct useWithin and comments
+    expect(screen.getByText(/Use within: 5 days/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Comments: Keep refrigerated\./i)
+    ).toBeInTheDocument();
+
+    // Hover over the second row (Bread)
+    fireEvent.mouseLeave(rows[0]);
+    fireEvent.mouseEnter(rows[1], { clientX: 150, clientY: 250 });
+
+    expect(screen.getByText(/Use within: 2 days/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Comments: Best before date is soon\./i)
+    ).toBeInTheDocument();
+
+    // textbox disappears when mouse leave the row
+    fireEvent.mouseLeave(rows[1]);
+    expect(screen.queryByText(/Use within:/i)).not.toBeInTheDocument();
+  });
+
+  it("Tests that when comments and useWithin are not provided, it displays N/A and/or no comments", async () => {
+    const sampleItems = [
+      {
+        itemName: "Eggs",
+        quantity: 12,
+        price: 3.5,
+        expDate: "2025-08-01",
+        location: "Fridge",
+        useWithin: null,
+        comments: null,
+      },
+    ];
+    render(<List itemList={sampleItems} />);
+    const rows = screen.getAllByTestId("itemList");
+
+    // Hover over item
+    fireEvent.mouseEnter(rows[0], { clientX: 100, clientY: 200 });
+
+    // check textbox for N/A and no comments
+    expect(screen.getByText(/Use within: N\/A/i)).toBeInTheDocument();
+    expect(screen.getByText(/Comments: No comments/i)).toBeInTheDocument();
+  });
 });
