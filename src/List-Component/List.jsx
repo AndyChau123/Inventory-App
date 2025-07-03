@@ -1,3 +1,4 @@
+import {DELETE_CONFIRMATION_MESSAGE} from "./ListConstants"
 import "./List.css";
 import * as React from "react";
 import { useSortBy, useTable, useRowSelect } from "react-table";
@@ -28,7 +29,7 @@ function sort(rowA, rowB, columnId) {
 }
 
 // Import itemList prop from App.jsx to display items in the table
-function List({ itemList }) {
+function List({ itemList, setItemList }) {
   // assign items array to data
   const data = React.useMemo(() => itemList, [itemList]);
 
@@ -91,25 +92,50 @@ function List({ itemList }) {
   );
 
   // use the useTable hook with columns and data to create a table instance using the react table functions
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data }, useSortBy, useRowSelect, (hooks) => {
-      hooks.visibleColumns.push((columns) => [
-        {
-          id: "selection",
-          Header: ({ getToggleAllRowsSelectedProps }) => (
-            <div>
-              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-            </div>
-          ),
-          Cell: ({ row }) => (
-            <div>
-              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-            </div>
-          ),
-        },
-        ...columns,
-      ]);
-    });
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    selectedFlatRows,
+  } = useTable({ columns, data }, useSortBy, useRowSelect, (hooks) => {
+    hooks.visibleColumns.push((columns) => [
+      {
+        id: "selection",
+        Header: ({ getToggleAllRowsSelectedProps }) => (
+          <div>
+            <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+          </div>
+        ),
+        Cell: ({ row }) => (
+          <div>
+            <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+          </div>
+        ),
+      },
+      ...columns,
+    ]);
+  });
+
+  const deleteRowFunction = () => {
+    const selectRows = selectedFlatRows.map((row) => row.original.id); //gets row data and id
+    const deleteRows = itemList.filter((row) => !selectRows.includes(row.id)); //filters the array and deletes what is selected
+    setItemList(deleteRows); //updates the rows
+  };
+
+  const deleteRowButton = () => {
+    //if table is empty delete nothing and prompt nothing
+    if (selectedFlatRows.length === 0) {
+      return;
+    }
+
+    //if user clicks the trashcan delete button prompt message confirming to delete or not
+    if (window.confirm(DELETE_CONFIRMATION_MESSAGE)) {
+      deleteRowFunction();
+    }
+  };
+
 
   return (
     <div className="list">
@@ -149,6 +175,16 @@ function List({ itemList }) {
             })}
           </tbody>
         </table>
+        <div className="deleteButton-container">
+          <button
+            id="deleteButton"
+            data-testid="list-deleteButton"
+            className="deleteButton-icon"
+            onClick={deleteRowButton}
+          >
+            <img src="./images/trashcan.png" alt="Delete"></img>
+          </button>
+        </div>
       </div>
     </div>
   );

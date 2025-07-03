@@ -14,7 +14,7 @@ function App() {
   return (
     <div className="rowC">
       <AddItem addItem={addItem} />
-      <List itemList={itemList} />
+      <List itemList={itemList} setItemList={setItemList} />
     </div>
   );
 }
