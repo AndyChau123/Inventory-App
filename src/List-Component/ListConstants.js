@@ -1,0 +1,1 @@
+export const DELETE_CONFIRMATION_MESSAGE = "Are you sure you want to delete the selected rows?";
