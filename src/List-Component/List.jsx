@@ -1,4 +1,4 @@
-import {DELETE_CONFIRMATION_MESSAGE} from "./ListConstants"
+import * as C from "./ListConstants";
 import "./List.css";
 import * as React from "react";
 import { useSortBy, useTable, useRowSelect } from "react-table";
@@ -135,11 +135,10 @@ function List({ itemList, setItemList }) {
     }
 
     //if user clicks the trashcan delete button prompt message confirming to delete or not
-    if (window.confirm(DELETE_CONFIRMATION_MESSAGE)) {
+    if (window.confirm(C.DELETE_CONFIRMATION_MESSAGE)) {
       deleteRowFunction();
     }
   };
-
 
   return (
     <div className="list">
@@ -202,26 +201,20 @@ function List({ itemList, setItemList }) {
       {/* Display item description when hovering over a row */}
       {hoveredRow !== null && (
         <div
-          // style the box
+          className="description-box"
+          //dynamic positioning done here
           style={{
-            position: "fixed",
             top: mousePos.y + 20,
             left: mousePos.x - 12,
-            background: "rgba(245, 254, 220, 0.85)",
-            color: "#000",
-            padding: "8px 12px",
-            borderRadius: "6px",
-            pointerEvents: "none",
-            zIndex: 1000,
-            maxWidth: "500px",
-            fontSize: "0.9em",
-            whiteSpace: "pre-line",
           }}
         >
-          {/* what goes in the box */}
-          {"Use within: " +
-            (hoveredRow.useWithin ? hoveredRow.useWithin + " days\n" : "N/A\n")}
-          {"Comments: " + (hoveredRow.comments || "No comments")}
+          {C.USE_WITHIN_LABEL}
+          {hoveredRow.useWithin
+            ? C.NUM_DAYS_MSG(hoveredRow.useWithin)
+            : C.NA_MSG}
+          <br />
+          {C.COMMENTS_LABEL}
+          {hoveredRow.comments || C.NO_COMMENTS_MSG}
         </div>
       )}
     </div>
