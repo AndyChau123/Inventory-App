@@ -57,3 +57,17 @@
   margin: 0;
   display: inline-block;
 }
+
+.openButton-container {
+  position: absolute;
+  /* right: -40%; comment for now uncomment later*/
+  top: 6.5%;
+}
+
+.openButton-icon {
+  background-color: rgb(142, 198, 142);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 15px;
+}

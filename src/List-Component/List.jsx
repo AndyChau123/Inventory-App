@@ -1,4 +1,4 @@
-import {DELETE_CONFIRMATION_MESSAGE} from "./ListConstants"
+import { DELETE_CONFIRMATION_MESSAGE } from "./ListConstants";
 import "./List.css";
 import * as React from "react";
 import { useSortBy, useTable, useRowSelect } from "react-table";
@@ -136,7 +136,6 @@ function List({ itemList, setItemList }) {
     }
   };
 
-
   return (
     <div className="list">
       <div className="listTable">
@@ -183,6 +182,15 @@ function List({ itemList, setItemList }) {
             onClick={deleteRowButton}
           >
             <img src="./images/trashcan.png" alt="Delete"></img>
+          </button>
+        </div>
+        <div className="openButton-container">
+          <button
+            id="openButton"
+            data-testid="list-openButton"
+            className="openButton-icon"
+          >
+            Open
           </button>
         </div>
       </div>
