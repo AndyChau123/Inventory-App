@@ -2,6 +2,7 @@ import * as C from "./ListConstants";
 import "./List.css";
 import * as React from "react";
 import { useSortBy, useTable, useRowSelect } from "react-table";
+import { FaRegEdit } from "react-icons/fa";
 
 // Sort function to handle all data types (equal values sort by name after)
 function sort(rowA, rowB, columnId) {
@@ -33,6 +34,10 @@ function List({ itemList, setItemList }) {
   // assign items array to data
   const data = React.useMemo(() => itemList, [itemList]);
 
+  // use react state to track if edit modal is open and which item is being edited
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
+  const [editItem, setEditItem] = React.useState(null);
+
   // use react state to track hovered row and mouse position
   const [hoveredRow, setHoveredRow] = React.useState(null);
   const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
@@ -40,6 +45,25 @@ function List({ itemList, setItemList }) {
   //define columns
   const columns = React.useMemo(
     () => [
+      {
+        id: "edit",
+        Header: "",
+        Cell: ({ row }) => (
+          <button
+            className="edit-btn"
+            onClick={() => {
+              setEditItem(row.original);
+              setIsEditModalOpen(true);
+            }}
+            style={{ background: "none", border: "none", cursor: "pointer" }}
+            aria-label="Edit"
+          >
+            <FaRegEdit />
+          </button>
+        ),
+        disableSortBy: true,
+        width: 40,
+      },
       {
         Header: "Name",
         accessor: "itemName",
