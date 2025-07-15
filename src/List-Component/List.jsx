@@ -140,6 +140,50 @@ function List({ itemList, setItemList }) {
     }
   };
 
+  const openButtonFunction = () => {
+    setItemList((prevDate) =>
+      prevDate.map((row) => {
+        const selectedRows = selectedFlatRows.find(
+          (r) => r.original.id === row.id
+        );
+        if (!selectedRows || row.isOpened) {
+          return row; // if the row isn't selected or already opened, don't modify the date
+        }
+
+        const useWithinDays = parseInt(selectedRows.original.useWithin, 10); //converting useWithin to an integer
+        if (useWithinDays <= 0 || isNaN(useWithinDays)) {
+          return row; //if useWithin is <= 0 or no input is added then don't update the row
+        }
+
+        const todaysDate = new Date(); // get todays date
+        const newExpDate = new Date(todaysDate); // make a copy to modify the date
+        newExpDate.setDate(todaysDate.getDate() + useWithinDays);
+
+        const currentExpDate = new Date(row.expDate); // gets current experiation date from row
+
+        const finalExpDate = currentExpDate < newExpDate ? currentExpDate : newExpDate; // finds the minimum between the two dates
+        const formattedDate = finalExpDate.toISOString().slice(0, 10); //formats the date to YYYY-MM-DD
+
+        return {
+          ...row,
+          expDate: formattedDate,
+          isOpened: true,
+        };
+      })
+    );
+  };
+
+  const openButton = () => {
+    //if table is empty open nothing and prompt nothing
+    if (selectedFlatRows.length === 0) {
+      return;
+    }
+
+    if (window.confirm(C.OPEN_CONFIRMATION_MESSAGE)) {
+      openButtonFunction();
+    }
+  };
+
   return (
     <div className="list">
       <div className="listTable">
@@ -202,6 +246,7 @@ function List({ itemList, setItemList }) {
             id="openButton"
             data-testid="list-openButton"
             className="openButton-icon"
+            onClick={openButton}
           >
             Open
           </button>
