@@ -3,6 +3,7 @@ import "./List.css";
 import * as React from "react";
 import { useSortBy, useTable, useRowSelect } from "react-table";
 import { FaRegEdit } from "react-icons/fa";
+import EditModal from "./EditModal";
 
 // Sort function to handle all data types (equal values sort by name after)
 function sort(rowA, rowB, columnId) {
@@ -41,6 +42,14 @@ function List({ itemList, setItemList }) {
   // use react state to track hovered row and mouse position
   const [hoveredRow, setHoveredRow] = React.useState(null);
   const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
+
+  // Handle edit save
+  const handleEditSave = (updatedItem) => {
+    setItemList((prev) =>
+      prev.map((item) => (item.id == updatedItem.id ? updatedItem : item))
+    );
+    setIsEditModalOpen(false);
+  };
 
   //define columns
   const columns = React.useMemo(
@@ -241,96 +250,14 @@ function List({ itemList, setItemList }) {
           {hoveredRow.comments || C.NO_COMMENTS_MSG}
         </div>
       )}
-      {isEditModalOpen && editItem && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2>Edit Item</h2>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setItemList((prev) =>
-                  prev.map((item) =>
-                    item.id === editItem.id ? editItem : item
-                  )
-                );
-                setIsEditModalOpen(false);
-              }}
-            >
-              <label>
-                Name:
-                <input
-                  value={editItem.itemName}
-                  onChange={(e) =>
-                    setEditItem({ ...editItem, itemName: e.target.value })
-                  }
-                />
-              </label>
-              <label>
-                Quantity:
-                <input
-                  type="number"
-                  value={editItem.quantity}
-                  onChange={(e) =>
-                    setEditItem({ ...editItem, quantity: e.target.value })
-                  }
-                />
-              </label>
-              <label>
-                Price:
-                <input
-                  type="number"
-                  value={editItem.price}
-                  onChange={(e) =>
-                    setEditItem({ ...editItem, price: e.target.value })
-                  }
-                />
-              </label>
-              <label>
-                Expiration Date:
-                <input
-                  type="date"
-                  value={editItem.expDate}
-                  onChange={(e) =>
-                    setEditItem({ ...editItem, expDate: e.target.value })
-                  }
-                />
-              </label>
-              <label>
-                Location:
-                <input
-                  value={editItem.location}
-                  onChange={(e) =>
-                    setEditItem({ ...editItem, location: e.target.value })
-                  }
-                />
-              </label>
-              <label>
-                Use Within:
-                <input
-                  type="number"
-                  value={editItem.useWithin}
-                  onChange={(e) =>
-                    setEditItem({ ...editItem, useWithin: e.target.value })
-                  }
-                />
-              </label>
-              <label>
-                Comments:
-                <textarea
-                  value={editItem.comments}
-                  onChange={(e) =>
-                    setEditItem({ ...editItem, comments: e.target.value })
-                  }
-                />
-              </label>
-              <button type="submit">Save</button>
-              <button type="button" onClick={() => setIsEditModalOpen(false)}>
-                Cancel
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+      {/* Edit modal component */}
+      <EditModal
+        isOpen={isEditModalOpen}
+        editItem={editItem}
+        setEditItem={setEditItem}
+        onSave={handleEditSave}
+        onCancel={() => setIsEditModalOpen(false)}
+      />
     </div>
   );
 }

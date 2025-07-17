@@ -71,40 +71,10 @@
   white-space: pre-line;
 }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-}
-.modal {
-  background: rgba(245, 254, 220, 0.85);
-  padding: 2em;
-  border-radius: 8px;
-  min-width: 300px;
-  max-width: 90vw;
-  color: #000;
-}
-.modal label {
-  display: block;
-  margin: 1em 0 0.5em;
-  color: #000;
-}
-.modal input,
-.modal textarea {
-  width: 100%;
-  margin-bottom: 1em;
-}
-.edit-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #333;
-  font-size: 1.2em;
+.listTable table {
+  width: 245%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
 }
