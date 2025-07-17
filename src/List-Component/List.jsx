@@ -161,7 +161,8 @@ function List({ itemList, setItemList }) {
 
         const currentExpDate = new Date(row.expDate); // gets current experiation date from row
 
-        const finalExpDate = currentExpDate < newExpDate ? currentExpDate : newExpDate; // finds the minimum between the two dates
+        const finalExpDate =
+          currentExpDate < newExpDate ? currentExpDate : newExpDate; // finds the minimum between the two dates
         const formattedDate = finalExpDate.toISOString().slice(0, 10); //formats the date to YYYY-MM-DD
 
         return {
