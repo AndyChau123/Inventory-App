@@ -5,3 +5,5 @@ export const NUM_DAYS_MSG = (days) => `${days} days`;
 export const NA_MSG = "N/A";
 export const COMMENTS_LABEL = "Comments: ";
 export const NO_COMMENTS_MSG = "No comments";
+export const OPEN_CONFIRMATION_MESSAGE =
+  "Are you sure you want to open the selected rows?";
