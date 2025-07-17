@@ -64,7 +64,6 @@ function List({ itemList, setItemList }) {
               setEditItem(row.original);
               setIsEditModalOpen(true);
             }}
-            style={{ background: "none", border: "none", cursor: "pointer" }}
             aria-label="Edit"
           >
             <FaRegEdit />
