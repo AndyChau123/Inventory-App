@@ -685,7 +685,7 @@ describe("List", () => {
     ]);
   });
 
-  it("Checks to see if the expiration dates are not being updated when user clicks cancel (single row)", async () => {
+  it("Checks to see if the expiration dates are not being updated when user clicks cancel (every row)", async () => {
     vi.useFakeTimers().setSystemTime(new Date("2025-07-25")); //simulate that today is the date
 
     const sampleItems = [
