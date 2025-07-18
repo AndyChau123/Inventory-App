@@ -21,7 +21,7 @@ function AddItem({ addItem }) {
       price: item.price,
       location: item.location,
       comments: item.comments,
-      id: crypto.randomUUID(), //generates random id 
+      id: crypto.randomUUID(), //generates random id
     };
     addItem(newItem);
 
@@ -116,6 +116,12 @@ location (String)
             value={item.useWithin}
             onChange={(e) => {
               setItem({ ...item, useWithin: e.target.value });
+            }}
+            // prevent typing "."
+            onKeyDown={(e) => {
+              if (e.key === ".") {
+                e.preventDefault();
+              }
             }}
           />
         </div>
