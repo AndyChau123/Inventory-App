@@ -71,6 +71,14 @@
   white-space: pre-line;
 }
 
+.listTable table {
+  width: 245%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+}
+
 .openButton-container {
   position: absolute;
   right: -42%;
