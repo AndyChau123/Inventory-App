@@ -493,4 +493,242 @@ describe("List", () => {
     expect(screen.getByText(/Use within: N\/A/i)).toBeInTheDocument();
     expect(screen.getByText(/Comments: No comments/i)).toBeInTheDocument();
   });
+
+  it("Checks to see if the expiration dates are being updated when user clicks open (single row)", async () => {
+    vi.useFakeTimers().setSystemTime(new Date("2025-07-25")); //simulate that today is this date
+
+    const sampleItems = [
+      {
+        itemName: "Eggs",
+        quantity: "12",
+        price: "3.50",
+        expDate: "2025-08-01",
+        location: "Fridge",
+        useWithin: "3",
+        id: "1",
+      },
+      {
+        itemName: "Bread",
+        quantity: "1",
+        price: "2.00",
+        expDate: "2025-07-25",
+        location: "Pantry",
+        useWithin: "5",
+        id: "2",
+      },
+    ];
+
+    const mockSetSampleItems = vi.fn();
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+
+    render(<List itemList={sampleItems} setItemList={mockSetSampleItems} />);
+
+    const checkboxes = screen.getAllByRole("checkbox");
+
+    expect(checkboxes[0]).not.toBeChecked();
+    expect(checkboxes[1]).not.toBeChecked();
+    expect(checkboxes[2]).not.toBeChecked();
+
+    fireEvent.click(checkboxes[1]); // select row 1
+    expect(checkboxes[1]).toBeChecked();
+    expect(checkboxes[0]).not.toBeChecked();
+    expect(checkboxes[2]).not.toBeChecked();
+
+    const openButton = screen.getByTestId("list-openButton");
+    fireEvent.click(openButton); //click the open button
+
+    expect(mockSetSampleItems).toHaveBeenCalled();
+    expect(window.confirm).toHaveBeenCalled(); //confirms user choice and opens item
+
+    const updaterList = mockSetSampleItems.mock.calls[0][0]; // grabs first call in the first argument
+    const updatedDates = updaterList(sampleItems); // calls updater List to get the new updated list
+
+    expect(updatedDates).toEqual([
+      {
+        itemName: "Eggs",
+        quantity: "12",
+        price: "3.50",
+        expDate: "2025-07-28", //07-25 + 3 days
+        location: "Fridge",
+        useWithin: "3",
+        isOpened: true, // this is now opened
+        id: "1",
+      },
+      {
+        itemName: "Bread",
+        quantity: "1",
+        price: "2.00",
+        expDate: "2025-07-25", //date stays the same
+        location: "Pantry",
+        useWithin: "5",
+        id: "2",
+      },
+    ]);
+  });
+
+  it("Checks to see if the expiration dates are not being updated when user clicks cancel (single row)", async () => {
+    vi.useFakeTimers().setSystemTime(new Date("2025-07-25")); //simulate that today is this date
+
+    const sampleItems = [
+      {
+        itemName: "Eggs",
+        quantity: "12",
+        price: "3.50",
+        expDate: "2025-08-01",
+        location: "Fridge",
+        useWithin: "3",
+        id: "1",
+      },
+      {
+        itemName: "Bread",
+        quantity: "1",
+        price: "2.00",
+        expDate: "2025-07-25",
+        location: "Pantry",
+        useWithin: "5",
+        id: "2",
+      },
+    ];
+
+    const mockSetSampleItems = vi.fn();
+    vi.spyOn(window, "confirm").mockReturnValue(false);
+
+    render(<List itemList={sampleItems} setItemList={mockSetSampleItems} />);
+
+    const checkboxes = screen.getAllByRole("checkbox");
+
+    expect(checkboxes[0]).not.toBeChecked();
+    expect(checkboxes[1]).not.toBeChecked();
+    expect(checkboxes[2]).not.toBeChecked();
+
+    fireEvent.click(checkboxes[1]); // select row 1
+    expect(checkboxes[1]).toBeChecked();
+    expect(checkboxes[0]).not.toBeChecked();
+    expect(checkboxes[2]).not.toBeChecked();
+
+    const openButton = screen.getByTestId("list-openButton");
+    fireEvent.click(openButton); // click the open button
+
+    expect(mockSetSampleItems).not.toHaveBeenCalled();
+    expect(window.confirm).toHaveBeenCalled(); // cancels the open item and doesn't update expiration date
+  });
+
+  it("Checks to see if the expiration dates are being updated when user clicks open (every row)", async () => {
+    vi.useFakeTimers().setSystemTime(new Date("2025-07-25"));
+
+    const sampleItems = [
+      {
+        itemName: "Eggs",
+        quantity: "12",
+        price: "3.50",
+        expDate: "2025-08-01",
+        location: "Fridge",
+        useWithin: "3",
+        id: "1",
+      },
+      {
+        itemName: "Bread",
+        quantity: "1",
+        price: "2.00",
+        expDate: "2025-08-13",
+        location: "Pantry",
+        useWithin: "5",
+        id: "2",
+      },
+    ];
+
+    const mockSetSampleItems = vi.fn();
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+
+    render(<List itemList={sampleItems} setItemList={mockSetSampleItems} />);
+
+    const checkboxes = screen.getAllByRole("checkbox");
+
+    expect(checkboxes[0]).not.toBeChecked();
+    expect(checkboxes[1]).not.toBeChecked();
+    expect(checkboxes[2]).not.toBeChecked();
+
+    fireEvent.click(checkboxes[0]); // select all
+    expect(checkboxes[1]).toBeChecked();
+    expect(checkboxes[2]).toBeChecked();
+
+    const openButton = screen.getByTestId("list-openButton");
+    fireEvent.click(openButton); // click open
+
+    expect(mockSetSampleItems).toHaveBeenCalled();
+    expect(window.confirm).toHaveBeenCalled();
+
+    const updaterList = mockSetSampleItems.mock.calls[0][0]; // grabs first call in the first argument
+    const updatedDates = updaterList(sampleItems); // calls updater List to get the new updated list
+
+    expect(updatedDates).toEqual([
+      {
+        itemName: "Eggs",
+        quantity: "12",
+        price: "3.50",
+        expDate: "2025-07-28", // 07-25 + 3 days
+        location: "Fridge",
+        useWithin: "3",
+        isOpened: true,
+        id: "1",
+      },
+      {
+        itemName: "Bread",
+        quantity: "1",
+        price: "2.00",
+        expDate: "2025-07-30", // 07-25 + 5 days
+        location: "Pantry",
+        useWithin: "5",
+        isOpened: true,
+        id: "2",
+      },
+    ]);
+  });
+
+  it("Checks to see if the expiration dates are not being updated when user clicks cancel (every row)", async () => {
+    vi.useFakeTimers().setSystemTime(new Date("2025-07-25")); //simulate that today is the date
+
+    const sampleItems = [
+      {
+        itemName: "Eggs",
+        quantity: "12",
+        price: "3.50",
+        expDate: "2025-08-01",
+        location: "Fridge",
+        useWithin: "3",
+        id: "1",
+      },
+      {
+        itemName: "Bread",
+        quantity: "1",
+        price: "2.00",
+        expDate: "2025-07-25",
+        location: "Pantry",
+        useWithin: "5",
+        id: "2",
+      },
+    ];
+
+    const mockSetSampleItems = vi.fn();
+    vi.spyOn(window, "confirm").mockReturnValue(false);
+
+    render(<List itemList={sampleItems} setItemList={mockSetSampleItems} />);
+
+    const checkboxes = screen.getAllByRole("checkbox");
+
+    expect(checkboxes[0]).not.toBeChecked();
+    expect(checkboxes[1]).not.toBeChecked();
+    expect(checkboxes[2]).not.toBeChecked();
+
+    fireEvent.click(checkboxes[0]); // select every row
+    expect(checkboxes[0]).toBeChecked();
+    expect(checkboxes[1]).toBeChecked();
+    expect(checkboxes[2]).toBeChecked();
+
+    const openButton = screen.getByTestId("list-openButton");
+    fireEvent.click(openButton); // click the open button
+
+    expect(mockSetSampleItems).not.toHaveBeenCalled();
+    expect(window.confirm).toHaveBeenCalled(); // click cancel
+  });
 });
