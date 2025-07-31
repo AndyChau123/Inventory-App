@@ -731,4 +731,139 @@ describe("List", () => {
     expect(mockSetSampleItems).not.toHaveBeenCalled();
     expect(window.confirm).toHaveBeenCalled(); // click cancel
   });
+  it("Checks to see if expiring items are changing font colors", async () => {
+    vi.useFakeTimers().setSystemTime(new Date("2025-07-30")); //simulate that today is the date
+
+    const sampleItems = [
+      {
+        itemName: "Eggs",
+        quantity: "12",
+        price: "3.50",
+        expDate: "2025-08-05",
+        location: "Fridge",
+        useWithin: "3",
+        id: "1",
+      },
+      {
+        itemName: "Bread",
+        quantity: "1",
+        price: "2.00",
+        expDate: "2025-07-25",
+        location: "Pantry",
+        useWithin: "5",
+        id: "2",
+      },
+      {
+        itemName: "Milk",
+        quantity: "1",
+        price: "3.00",
+        expDate: "2025-08-20",
+        location: "Freezer",
+        useWithin: "7",
+        id: "3",
+      },
+    ];
+
+    const mockSetSampleItems = vi.fn();
+
+    render(<List itemList={sampleItems} setItemList={mockSetSampleItems} />);
+
+    expect(screen.getByText("2025-07-25")).toHaveClass("expired-item"); //checks if expired
+    expect(screen.getByText("2025-08-05")).toHaveClass("almost-expired-item"); //checks if almost expired
+    expect(screen.getByText("2025-08-20")).toHaveClass(
+      "normal-expiration-item"
+    ); //normal expiration
+  });
+  it("Checks to see if expiring items are changing font colors when user opens items", async () => {
+    vi.useFakeTimers().setSystemTime(new Date("2025-07-30")); //simulate that today is the date
+
+    const sampleItems = [
+      {
+        itemName: "Eggs",
+        quantity: "12",
+        price: "3.50",
+        expDate: "2025-07-25",
+        location: "Fridge",
+        useWithin: "3",
+        id: "1",
+      },
+      {
+        itemName: "Bread",
+        quantity: "1",
+        price: "2.00",
+        expDate: "2025-08-15",
+        location: "Pantry",
+        useWithin: "5",
+        id: "2",
+      },
+      {
+        itemName: "Milk",
+        quantity: "1",
+        price: "3.00",
+        expDate: "2025-08-20",
+        location: "Freezer",
+        useWithin: "11",
+        id: "3",
+      },
+    ];
+
+    const mockSetSampleItems = vi.fn();
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+
+    render(<List itemList={sampleItems} setItemList={mockSetSampleItems} />);
+
+    const checkboxes = screen.getAllByRole("checkbox");
+
+    fireEvent.click(checkboxes[0]); // select all
+
+    const openButton = screen.getByTestId("list-openButton");
+    fireEvent.click(openButton); // click open
+
+    expect(mockSetSampleItems).toHaveBeenCalled();
+    expect(window.confirm).toHaveBeenCalled();
+
+    const updaterList = mockSetSampleItems.mock.calls[0][0];
+    const updatedDates = updaterList(sampleItems);
+
+    expect(updatedDates).toEqual([
+      {
+        itemName: "Eggs",
+        quantity: "12",
+        price: "3.50",
+        expDate: "2025-07-25", // date stays the same
+        location: "Fridge",
+        useWithin: "3",
+        isOpened: true,
+        id: "1",
+      },
+      {
+        itemName: "Bread",
+        quantity: "1",
+        price: "2.00",
+        expDate: "2025-08-04", // 7/30 + 5 days
+        location: "Pantry",
+        useWithin: "5",
+        isOpened: true,
+        id: "2",
+      },
+      {
+        itemName: "Milk",
+        quantity: "1",
+        price: "3.00",
+        expDate: "2025-08-10", // 7/30 + 11 days
+        location: "Freezer",
+        useWithin: "11",
+        isOpened: true,
+        id: "3",
+      },
+    ]);
+
+    render(<List itemList={updatedDates} setItemList={mockSetSampleItems} />);
+
+    expect(screen.getAllByText("2025-07-25")[1]).toHaveClass("expired-item"); // checks if expired
+    expect(screen.getByText("2025-08-04")).toHaveClass("almost-expired-item"); // checks if almost expired
+    expect(screen.getByText("2025-08-10")).toHaveClass(
+      "normal-expiration-item"
+    ); // no changes, normal expiration
+  });
 });
