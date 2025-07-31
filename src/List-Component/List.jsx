@@ -217,6 +217,21 @@ function List({ itemList, setItemList }) {
     }
   };
 
+  const isExpired = (expiringItem) => {
+    const today = new Date(); //get today's date
+    const expiredItem = new Date(expiringItem); //get input and convert to a date
+    const oneDay = 1000 * 24 * 60 * 60; // convert into one day
+    const timeDifference = expiredItem - today; //checks to see if item is expired/close to expiration
+
+    if (timeDifference < 0) {
+      return "expired-item"; // if item is less than 0 then it is expired
+    } else if (timeDifference < 7 * oneDay) {
+      return "almost-expired-item"; // if item is within 7 days it's almost expired
+    } else {
+      return "normal-expiration-item"; // no change
+    }
+  };
+
   return (
     <div className="list">
       <div className="listTable">
@@ -257,7 +272,16 @@ function List({ itemList, setItemList }) {
                   onMouseLeave={() => setHoveredRow(null)}
                 >
                   {row.cells.map((cell) => (
-                    <td {...cell.getCellProps()}> {cell.render("Cell")} </td>
+                    <td
+                      {...cell.getCellProps()}
+                      className={
+                        cell.column.id === "expDate"
+                          ? isExpired(cell.value)
+                          : ""
+                      }
+                    >
+                      {cell.render("Cell")}{" "}
+                    </td>
                   ))}
                 </tr>
               );

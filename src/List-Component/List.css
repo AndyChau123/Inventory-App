@@ -92,3 +92,15 @@
   padding: 8px 12px;
   font-size: 15px;
 }
+
+.expired-item {
+  color: red;
+}
+
+.almost-expired-item {
+  color: orange;
+}
+
+.normal-expiration-item {
+  color: black;
+}
